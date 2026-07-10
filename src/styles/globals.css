@@ -1,0 +1,163 @@
+/*
+ * @dept/component-library — sealed stylesheet.
+ *
+ * This file compiles to dist/styles.css, the ONLY stylesheet consumers load.
+ * Design rules (see README):
+ *
+ *  1. No preflight. A library must never ship global resets, so we import
+ *     Tailwind's theme + utilities but NOT tailwindcss/preflight.css.
+ *     Components must therefore style themselves fully (e.g. every `border`
+ *     needs an explicit border color; never rely on app base styles).
+ *
+ *  2. Everything is namespaced. Utilities carry the `ui:` prefix
+ *     (.ui\:bg-primary) and design tokens live on `--ui-*` variables, so the
+ *     host app's Tailwind build and tokens can never collide with ours —
+ *     components render exactly as they do in Storybook, in every app.
+ *
+ *  3. Tokens are the single theming surface. Utilities resolve through the
+ *     @theme inline mappings to the runtime `--ui-*` variables below. Dark
+ *     mode works by swapping those variables under `.dark`. A deliberate
+ *     override of a `--ui-*` variable is possible; an accidental one is not.
+ */
+
+@import "tailwindcss/theme.css" layer(theme) prefix(ui);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(ui);
+
+/* shadcn build-time helpers: data-* custom variants + scroll-fade/shimmer utilities */
+@import "shadcn/tailwind.css";
+@import "tw-animate-css";
+
+/* Dark mode follows the host app's `.dark` class on <html>/<body>. */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Map Tailwind theme keys to the sealed runtime variables. `inline` makes
+ * utilities reference var(--ui-<token>) directly, keeping them switchable at
+ * runtime (dark mode) while staying isolated from consumer tokens.
+ */
+@theme inline {
+  --font-sans: var(--ui-font-sans);
+  --font-heading: var(--ui-font-sans);
+  --color-background: var(--ui-background);
+  --color-foreground: var(--ui-foreground);
+  --color-card: var(--ui-card);
+  --color-card-foreground: var(--ui-card-foreground);
+  --color-popover: var(--ui-popover);
+  --color-popover-foreground: var(--ui-popover-foreground);
+  --color-primary: var(--ui-primary);
+  --color-primary-foreground: var(--ui-primary-foreground);
+  --color-secondary: var(--ui-secondary);
+  --color-secondary-foreground: var(--ui-secondary-foreground);
+  --color-muted: var(--ui-muted);
+  --color-muted-foreground: var(--ui-muted-foreground);
+  --color-accent: var(--ui-accent);
+  --color-accent-foreground: var(--ui-accent-foreground);
+  --color-destructive: var(--ui-destructive);
+  --color-border: var(--ui-border);
+  --color-input: var(--ui-input);
+  --color-ring: var(--ui-ring);
+  --color-chart-1: var(--ui-chart-1);
+  --color-chart-2: var(--ui-chart-2);
+  --color-chart-3: var(--ui-chart-3);
+  --color-chart-4: var(--ui-chart-4);
+  --color-chart-5: var(--ui-chart-5);
+  --color-sidebar: var(--ui-sidebar);
+  --color-sidebar-foreground: var(--ui-sidebar-foreground);
+  --color-sidebar-primary: var(--ui-sidebar-primary);
+  --color-sidebar-primary-foreground: var(--ui-sidebar-primary-foreground);
+  --color-sidebar-accent: var(--ui-sidebar-accent);
+  --color-sidebar-accent-foreground: var(--ui-sidebar-accent-foreground);
+  --color-sidebar-border: var(--ui-sidebar-border);
+  --color-sidebar-ring: var(--ui-sidebar-ring);
+  /*
+   * Radius scale derives from the single --ui-radius runtime knob. These calc()
+   * definitions double as the emitted values for --ui-radius-* when component
+   * source references them in arbitrary values (rounded-[min(var(--ui-radius-md),10px)]),
+   * so they must NOT point back at var(--ui-radius-*) — that would be circular.
+   */
+  --radius-sm: calc(var(--ui-radius) * 0.6);
+  --radius-md: calc(var(--ui-radius) * 0.8);
+  --radius-lg: var(--ui-radius);
+  --radius-xl: calc(var(--ui-radius) * 1.4);
+  --radius-2xl: calc(var(--ui-radius) * 1.8);
+  --radius-3xl: calc(var(--ui-radius) * 2.2);
+  --radius-4xl: calc(var(--ui-radius) * 2.6);
+}
+
+/*
+ * Runtime design tokens — the library's source of truth (base-nova defaults).
+ * Deliberately unlayered so casual consumer CSS can't outrank them by accident.
+ * Component source referencing tokens in arbitrary values must use these names
+ * (var(--ui-radius-md), never var(--radius-md)) — `npm run prefix-classes`
+ * rewrites known tokens automatically.
+ */
+:root {
+  --ui-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --ui-radius: 0.625rem;
+  --ui-background: oklch(1 0 0);
+  --ui-foreground: oklch(0.145 0 0);
+  --ui-card: oklch(1 0 0);
+  --ui-card-foreground: oklch(0.145 0 0);
+  --ui-popover: oklch(1 0 0);
+  --ui-popover-foreground: oklch(0.145 0 0);
+  --ui-primary: oklch(0.205 0 0);
+  --ui-primary-foreground: oklch(0.985 0 0);
+  --ui-secondary: oklch(0.97 0 0);
+  --ui-secondary-foreground: oklch(0.205 0 0);
+  --ui-muted: oklch(0.97 0 0);
+  --ui-muted-foreground: oklch(0.556 0 0);
+  --ui-accent: oklch(0.97 0 0);
+  --ui-accent-foreground: oklch(0.205 0 0);
+  --ui-destructive: oklch(0.577 0.245 27.325);
+  --ui-border: oklch(0.922 0 0);
+  --ui-input: oklch(0.922 0 0);
+  --ui-ring: oklch(0.708 0 0);
+  --ui-chart-1: oklch(0.87 0 0);
+  --ui-chart-2: oklch(0.556 0 0);
+  --ui-chart-3: oklch(0.439 0 0);
+  --ui-chart-4: oklch(0.371 0 0);
+  --ui-chart-5: oklch(0.269 0 0);
+  --ui-sidebar: oklch(0.985 0 0);
+  --ui-sidebar-foreground: oklch(0.145 0 0);
+  --ui-sidebar-primary: oklch(0.205 0 0);
+  --ui-sidebar-primary-foreground: oklch(0.985 0 0);
+  --ui-sidebar-accent: oklch(0.97 0 0);
+  --ui-sidebar-accent-foreground: oklch(0.205 0 0);
+  --ui-sidebar-border: oklch(0.922 0 0);
+  --ui-sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --ui-background: oklch(0.145 0 0);
+  --ui-foreground: oklch(0.985 0 0);
+  --ui-card: oklch(0.205 0 0);
+  --ui-card-foreground: oklch(0.985 0 0);
+  --ui-popover: oklch(0.205 0 0);
+  --ui-popover-foreground: oklch(0.985 0 0);
+  --ui-primary: oklch(0.922 0 0);
+  --ui-primary-foreground: oklch(0.205 0 0);
+  --ui-secondary: oklch(0.269 0 0);
+  --ui-secondary-foreground: oklch(0.985 0 0);
+  --ui-muted: oklch(0.269 0 0);
+  --ui-muted-foreground: oklch(0.708 0 0);
+  --ui-accent: oklch(0.269 0 0);
+  --ui-accent-foreground: oklch(0.985 0 0);
+  --ui-destructive: oklch(0.704 0.191 22.216);
+  --ui-border: oklch(1 0 0 / 10%);
+  --ui-input: oklch(1 0 0 / 15%);
+  --ui-ring: oklch(0.556 0 0);
+  --ui-chart-1: oklch(0.87 0 0);
+  --ui-chart-2: oklch(0.556 0 0);
+  --ui-chart-3: oklch(0.439 0 0);
+  --ui-chart-4: oklch(0.371 0 0);
+  --ui-chart-5: oklch(0.269 0 0);
+  --ui-sidebar: oklch(0.205 0 0);
+  --ui-sidebar-foreground: oklch(0.985 0 0);
+  --ui-sidebar-primary: oklch(0.488 0.243 264.376);
+  --ui-sidebar-primary-foreground: oklch(0.985 0 0);
+  --ui-sidebar-accent: oklch(0.269 0 0);
+  --ui-sidebar-accent-foreground: oklch(0.985 0 0);
+  --ui-sidebar-border: oklch(1 0 0 / 10%);
+  --ui-sidebar-ring: oklch(0.556 0 0);
+}

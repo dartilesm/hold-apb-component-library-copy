@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "storybook",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-lc",
+        "export PATH=$HOME/.nvm/versions/node/v22.17.0/bin:$PATH && COREPACK_ENABLE_DOWNLOAD_PROMPT=0 corepack pnpm run storybook -- --no-open --ci"
+      ],
+      "port": 6006
+    }
+  ]
+}

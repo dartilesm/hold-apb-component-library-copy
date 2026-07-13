@@ -1,163 +1,238 @@
 /*
- * @dept/component-library — sealed stylesheet.
+ * @dept/component-library — shipped stylesheet (compiles to dist/styles.css).
  *
- * This file compiles to dist/styles.css, the ONLY stylesheet consumers load.
- * Design rules (see README):
+ * SOURCE OF TRUTH: this file is a copy of the org globals.css
+ * (core-platform: apps/web/src/app/globals.css). When that file updates,
+ * paste it in again wholesale — but preserve the four library-specific
+ * deviations below, all in the imports/footer, never in the token blocks:
  *
- *  1. No preflight. A library must never ship global resets, so we import
- *     Tailwind's theme + utilities but NOT tailwindcss/preflight.css.
- *     Components must therefore style themselves fully (e.g. every `border`
- *     needs an explicit border color; never rely on app base styles).
- *
- *  2. Everything is namespaced. Utilities carry the `ui:` prefix
- *     (.ui\:bg-primary) and design tokens live on `--ui-*` variables, so the
- *     host app's Tailwind build and tokens can never collide with ours —
- *     components render exactly as they do in Storybook, in every app.
- *
- *  3. Tokens are the single theming surface. Utilities resolve through the
- *     @theme inline mappings to the runtime `--ui-*` variables below. Dark
- *     mode works by swapping those variables under `.dark`. A deliberate
- *     override of a `--ui-*` variable is possible; an accidental one is not.
+ *  1. `@import "tailwindcss"` is replaced with theme + utilities imports —
+ *     NO preflight. A library must never ship global element resets.
+ *  2. The org's `@import "./utilities.css"` is omitted (app-local file).
+ *  3. The org's trailing `@layer base { ... }` block is omitted — no global
+ *     styles from a library. Components must style themselves fully
+ *     (e.g. every `border` needs an explicit border color).
+ *  4. `@import "shadcn/tailwind.css"` is added — base-nova components need
+ *     its data-* variants and helper utilities.
  */
 
-@import "tailwindcss/theme.css" layer(theme) prefix(ui);
-@import "tailwindcss/utilities.css" layer(utilities) prefix(ui);
-
-/* shadcn build-time helpers: data-* custom variants + scroll-fade/shimmer utilities */
-@import "shadcn/tailwind.css";
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-/* Dark mode follows the host app's `.dark` class on <html>/<body>. */
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Map Tailwind theme keys to the sealed runtime variables. `inline` makes
- * utilities reference var(--ui-<token>) directly, keeping them switchable at
- * runtime (dark mode) while staying isolated from consumer tokens.
- */
 @theme inline {
-  --font-sans: var(--ui-font-sans);
-  --font-heading: var(--ui-font-sans);
-  --color-background: var(--ui-background);
-  --color-foreground: var(--ui-foreground);
-  --color-card: var(--ui-card);
-  --color-card-foreground: var(--ui-card-foreground);
-  --color-popover: var(--ui-popover);
-  --color-popover-foreground: var(--ui-popover-foreground);
-  --color-primary: var(--ui-primary);
-  --color-primary-foreground: var(--ui-primary-foreground);
-  --color-secondary: var(--ui-secondary);
-  --color-secondary-foreground: var(--ui-secondary-foreground);
-  --color-muted: var(--ui-muted);
-  --color-muted-foreground: var(--ui-muted-foreground);
-  --color-accent: var(--ui-accent);
-  --color-accent-foreground: var(--ui-accent-foreground);
-  --color-destructive: var(--ui-destructive);
-  --color-border: var(--ui-border);
-  --color-input: var(--ui-input);
-  --color-ring: var(--ui-ring);
-  --color-chart-1: var(--ui-chart-1);
-  --color-chart-2: var(--ui-chart-2);
-  --color-chart-3: var(--ui-chart-3);
-  --color-chart-4: var(--ui-chart-4);
-  --color-chart-5: var(--ui-chart-5);
-  --color-sidebar: var(--ui-sidebar);
-  --color-sidebar-foreground: var(--ui-sidebar-foreground);
-  --color-sidebar-primary: var(--ui-sidebar-primary);
-  --color-sidebar-primary-foreground: var(--ui-sidebar-primary-foreground);
-  --color-sidebar-accent: var(--ui-sidebar-accent);
-  --color-sidebar-accent-foreground: var(--ui-sidebar-accent-foreground);
-  --color-sidebar-border: var(--ui-sidebar-border);
-  --color-sidebar-ring: var(--ui-sidebar-ring);
-  /*
-   * Radius scale derives from the single --ui-radius runtime knob. These calc()
-   * definitions double as the emitted values for --ui-radius-* when component
-   * source references them in arbitrary values (rounded-[min(var(--ui-radius-md),10px)]),
-   * so they must NOT point back at var(--ui-radius-*) — that would be circular.
-   */
-  --radius-sm: calc(var(--ui-radius) * 0.6);
-  --radius-md: calc(var(--ui-radius) * 0.8);
-  --radius-lg: var(--ui-radius);
-  --radius-xl: calc(var(--ui-radius) * 1.4);
-  --radius-2xl: calc(var(--ui-radius) * 1.8);
-  --radius-3xl: calc(var(--ui-radius) * 2.2);
-  --radius-4xl: calc(var(--ui-radius) * 2.6);
+  --color-dept-orange-100: var(--dept-orange-100);
+  --color-dept-orange-200: var(--dept-orange-200);
+  --color-dept-orange-300: var(--dept-orange-300);
+  --color-dept-orange-400: var(--dept-orange-400);
+  --color-dept-orange-500: var(--dept-orange-500);
+
+  --color-dept-gray-50: var(--dept-gray-50);
+  --color-dept-gray-100: var(--dept-gray-100);
+  --color-dept-gray-200: var(--dept-gray-200);
+  --color-dept-gray-250: var(--dept-gray-250);
+  --color-dept-gray-300: var(--dept-gray-300);
+  --color-dept-gray-350: var(--dept-gray-350);
+  --color-dept-gray-400: var(--dept-gray-400);
+  --color-dept-gray-500: var(--dept-gray-500);
+  --color-dept-gray-600: var(--dept-gray-600);
+  --color-dept-gray-700: var(--dept-gray-700);
+  --color-dept-gray-800: var(--dept-gray-800);
+  --color-dept-gray-900: var(--dept-gray-900);
+  --color-dept-gray-950: var(--dept-gray-950);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: "Inter Tight", -apple-system, blinkmacsystemfont, "Segoe UI",
+    roboto, "Helvetica Neue", arial, sans-serif;
+  --font-serif: ui-serif, georgia, cambria, "Times New Roman", times, serif;
+  --font-mono: "Geist Mono", "SF Mono", menlo, monaco, consolas, monospace;
+
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: calc(var(--radius) - 0.125rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.25rem);
+
+  --shadow-2xs: var(--shadow-2xs);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+
+  /* Custom colors */
+  --color-progress-gradient-from: var(--progress-gradient-from);
+  --color-progress-gradient-via: var(--progress-gradient-via);
 }
 
-/*
- * Runtime design tokens — the library's source of truth (base-nova defaults).
- * Deliberately unlayered so casual consumer CSS can't outrank them by accident.
- * Component source referencing tokens in arbitrary values must use these names
- * (var(--ui-radius-md), never var(--radius-md)) — `npm run prefix-classes`
- * rewrites known tokens automatically.
- */
-:root {
-  --ui-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --ui-radius: 0.625rem;
-  --ui-background: oklch(1 0 0);
-  --ui-foreground: oklch(0.145 0 0);
-  --ui-card: oklch(1 0 0);
-  --ui-card-foreground: oklch(0.145 0 0);
-  --ui-popover: oklch(1 0 0);
-  --ui-popover-foreground: oklch(0.145 0 0);
-  --ui-primary: oklch(0.205 0 0);
-  --ui-primary-foreground: oklch(0.985 0 0);
-  --ui-secondary: oklch(0.97 0 0);
-  --ui-secondary-foreground: oklch(0.205 0 0);
-  --ui-muted: oklch(0.97 0 0);
-  --ui-muted-foreground: oklch(0.556 0 0);
-  --ui-accent: oklch(0.97 0 0);
-  --ui-accent-foreground: oklch(0.205 0 0);
-  --ui-destructive: oklch(0.577 0.245 27.325);
-  --ui-border: oklch(0.922 0 0);
-  --ui-input: oklch(0.922 0 0);
-  --ui-ring: oklch(0.708 0 0);
-  --ui-chart-1: oklch(0.87 0 0);
-  --ui-chart-2: oklch(0.556 0 0);
-  --ui-chart-3: oklch(0.439 0 0);
-  --ui-chart-4: oklch(0.371 0 0);
-  --ui-chart-5: oklch(0.269 0 0);
-  --ui-sidebar: oklch(0.985 0 0);
-  --ui-sidebar-foreground: oklch(0.145 0 0);
-  --ui-sidebar-primary: oklch(0.205 0 0);
-  --ui-sidebar-primary-foreground: oklch(0.985 0 0);
-  --ui-sidebar-accent: oklch(0.97 0 0);
-  --ui-sidebar-accent-foreground: oklch(0.205 0 0);
-  --ui-sidebar-border: oklch(0.922 0 0);
-  --ui-sidebar-ring: oklch(0.708 0 0);
-}
-
+:root,
 .dark {
-  --ui-background: oklch(0.145 0 0);
-  --ui-foreground: oklch(0.985 0 0);
-  --ui-card: oklch(0.205 0 0);
-  --ui-card-foreground: oklch(0.985 0 0);
-  --ui-popover: oklch(0.205 0 0);
-  --ui-popover-foreground: oklch(0.985 0 0);
-  --ui-primary: oklch(0.922 0 0);
-  --ui-primary-foreground: oklch(0.205 0 0);
-  --ui-secondary: oklch(0.269 0 0);
-  --ui-secondary-foreground: oklch(0.985 0 0);
-  --ui-muted: oklch(0.269 0 0);
-  --ui-muted-foreground: oklch(0.708 0 0);
-  --ui-accent: oklch(0.269 0 0);
-  --ui-accent-foreground: oklch(0.985 0 0);
-  --ui-destructive: oklch(0.704 0.191 22.216);
-  --ui-border: oklch(1 0 0 / 10%);
-  --ui-input: oklch(1 0 0 / 15%);
-  --ui-ring: oklch(0.556 0 0);
-  --ui-chart-1: oklch(0.87 0 0);
-  --ui-chart-2: oklch(0.556 0 0);
-  --ui-chart-3: oklch(0.439 0 0);
-  --ui-chart-4: oklch(0.371 0 0);
-  --ui-chart-5: oklch(0.269 0 0);
-  --ui-sidebar: oklch(0.205 0 0);
-  --ui-sidebar-foreground: oklch(0.985 0 0);
-  --ui-sidebar-primary: oklch(0.488 0.243 264.376);
-  --ui-sidebar-primary-foreground: oklch(0.985 0 0);
-  --ui-sidebar-accent: oklch(0.269 0 0);
-  --ui-sidebar-accent-foreground: oklch(0.985 0 0);
-  --ui-sidebar-border: oklch(1 0 0 / 10%);
-  --ui-sidebar-ring: oklch(0.556 0 0);
+  /* ===========================================
+   * DEPT® Brand Colors — Orange Scale
+   * =========================================== */
+  --dept-orange-100: oklch(0.8587 0.0763 26.72);
+  --dept-orange-200: oklch(0.793 0.1195 28.16);
+  --dept-orange-300: oklch(0.6639 0.2264 36.11);
+  --dept-orange-400: oklch(0.6082 0.2134 33.5);
+  --dept-orange-500: oklch(0.5514 0.2007 30.49);
+
+  /* ===========================================
+   * Neutral Scale — Warm (DEPT® branded)
+   * =========================================== */
+  --dept-gray-50: oklch(0.9676 0.0016 66.89);
+  --dept-gray-100: oklch(0.9347 0.0045 78.26);
+  --dept-gray-200: oklch(0.9006 0.0067 53.02);
+  --dept-gray-250: oklch(0.8671 0.0094 62.38);
+  --dept-gray-300: oklch(0.8336 0.0113 63.19);
+  --dept-gray-350: oklch(0.7975 0.0141 60.39);
+  --dept-gray-400: oklch(0.7081 0.0136 59.86);
+  --dept-gray-500: oklch(0.6186 0.0131 59.33);
+  --dept-gray-600: oklch(0.5247 0.0118 63.41);
+  --dept-gray-700: oklch(0.4308 0.0104 67.49);
+  --dept-gray-800: oklch(0.3655 0.0069 67.49);
+  --dept-gray-900: oklch(0.3003 0.0035 67.49);
+  --dept-gray-950: oklch(0.235 0 0);
+
+  /* ===========================================
+   * Semantic Colors
+   * =========================================== */
+
+  /* Base surfaces */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.235 0 0);
+
+  /* Card */
+  --card: oklch(0.9676 0.0016 66.89);
+  --card-foreground: oklch(0.235 0 0);
+
+  /* Popover */
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.235 0 0);
+
+  /* Primary */
+  --primary: oklch(0.6639 0.2264 36.11);
+  --primary-foreground: oklch(0.9851 0 0);
+
+  /* Secondary */
+  --secondary: oklch(0.9347 0.0045 78.26);
+  --secondary-foreground: oklch(0.235 0 0);
+
+  /* Muted */
+  --muted: oklch(0.9347 0.0045 78.26);
+  --muted-foreground: oklch(0.5247 0.0118 63.41);
+
+  /* Accent */
+  --accent: oklch(0.9347 0.0045 78.26);
+  --accent-foreground: oklch(0.235 0 0);
+
+  /* Destructive */
+  --destructive: oklch(0.62 0.22 18);
+  --destructive-foreground: oklch(0.995 0 0);
+
+  /* Border & Input */
+  --border: oklch(0.9006 0.0067 53.02);
+  --input: oklch(0.235 0 0);
+  --ring: oklch(0.235 0 0);
+
+  /* ===========================================
+   * Chart Colors
+   * =========================================== */
+  --chart-1: oklch(0.8336 0.0113 63.19);
+  --chart-2: oklch(0.6639 0.2264 36.11);
+  --chart-3: oklch(0.3923 0.0316 270.4873);
+  --chart-4: oklch(0.9416 0.18 116.0791);
+  --chart-5: oklch(0.6427 0.2153 28.8057);
+
+  /* ===========================================
+   * Sidebar Colors
+   * =========================================== */
+  --sidebar: oklch(0.9676 0.0016 66.89);
+  --sidebar-foreground: oklch(0.235 0 0);
+  --sidebar-primary: oklch(0.235 0 0);
+  --sidebar-primary-foreground: oklch(0.9851 0 0);
+  --sidebar-accent: oklch(0.9347 0.0045 78.26);
+  --sidebar-accent-foreground: oklch(0.235 0 0);
+  --sidebar-border: oklch(0.9006 0.0067 53.02);
+  --sidebar-ring: oklch(0.6639 0.2264 36.11);
+
+  /* ===========================================
+   * Layout & Spacing
+   * =========================================== */
+  --radius: 0.5rem;
+  --shadow-2xs: 0 1px 0px 0px hsl(0 0% 0% / 0);
+  --shadow-xs: 0 1px 0px 0px hsl(0 0% 0% / 0);
+  --shadow-sm: 0 1px 0px 0px hsl(0 0% 0% / 0), 0 1px 2px -1px hsl(0 0% 0% / 0);
+  --shadow: 0 1px 0px 0px hsl(0 0% 0% / 0), 0 1px 2px -1px hsl(0 0% 0% / 0);
+  --shadow-md: 0 1px 0px 0px hsl(0 0% 0% / 0), 0 2px 4px -1px hsl(0 0% 0% / 0);
+  --shadow-lg: 0 1px 0px 0px hsl(0 0% 0% / 0), 0 4px 6px -1px hsl(0 0% 0% / 0);
+  --shadow-xl: 0 1px 0px 0px hsl(0 0% 0% / 0), 0 8px 10px -1px hsl(0 0% 0% / 0);
+  --shadow-2xl: 0 1px 0px 0px hsl(0 0% 0% / 0);
+  --tracking-normal: 0rem;
+  --spacing: 0.25rem;
+
+  /* ===========================================
+   * Semantic State Colors
+   * =========================================== */
+  --success: oklch(0.9 0.09 158);
+  --success-foreground: oklch(0.235 0 0);
+  --warning: oklch(0.9 0.1 75);
+  --warning-foreground: oklch(0.235 0 0);
+
+  /* ===========================================
+   * Custom Colors (Progress gradients)
+   * =========================================== */
+  --progress-gradient-from: oklch(0.8477 0.055 270.34);
+  --progress-gradient-via: oklch(0.7435 0.0937 257.24);
 }

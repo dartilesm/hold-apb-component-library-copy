@@ -33,19 +33,19 @@ function Button({
       {...props}
     >
       {isLoading ? (
-        <span data-icon="inline-start" className="ui:contents">
-          <LoaderCircleIcon className="ui:animate-spin" aria-hidden />
+        <span data-icon="inline-start" className="contents">
+          <LoaderCircleIcon className="animate-spin" aria-hidden />
         </span>
       ) : (
         leftIcon && (
-          <span data-icon="inline-start" className="ui:contents">
+          <span data-icon="inline-start" className="contents">
             {leftIcon}
           </span>
         )
       )}
       {children}
       {rightIcon && (
-        <span data-icon="inline-end" className="ui:contents">
+        <span data-icon="inline-end" className="contents">
           {rightIcon}
         </span>
       )}

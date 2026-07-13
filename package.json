@@ -23,8 +23,6 @@
     "build:watch": "vite build --config vite.lib.config.ts --watch",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "prefix-classes": "node scripts/prefix-tw-classes.mjs",
-    "prefix-classes:check": "node scripts/prefix-tw-classes.mjs --check",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "yalc:publish": "pnpm run build && yalc publish --push",

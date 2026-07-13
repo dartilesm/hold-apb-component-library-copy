@@ -30,9 +30,6 @@ jobs:
       - name: Type check
         run: pnpm run typecheck
 
-      - name: Check Tailwind class prefixes
-        run: pnpm run prefix-classes:check
-
       - name: Build library
         run: pnpm run build
 

@@ -2,28 +2,67 @@
 
 DEPT's shared React component library. [shadcn/ui](https://ui.shadcn.com) components (base-nova style) on [Base UI](https://base-ui.com) primitives, styled with Tailwind CSS v4 and [lucide](https://lucide.dev) icons, wrapped behind a stable API and published privately to GitHub Packages.
 
-**Styling model: self-contained CSS, shared vocabulary.** The package ships its own precompiled stylesheet using standard (unprefixed) Tailwind class names and the standard shadcn token names — so consuming apps don't need Tailwind, and apps that have it can pass their own classes via `className`. This deliberately relies on all DEPT frontends sharing the same org `globals.css` (identical tokens, Tailwind v4): duplicate class definitions are then identical and collisions harmless. See "Styling model" below for the trade-off we accepted.
+The package ships its own precompiled stylesheet (standard Tailwind class names, standard shadcn tokens, no preflight) — consuming apps don't need Tailwind, and apps that have it can customize components via `className`.
+
+## Local testing (yalc)
+
+Test library changes in a consuming app without publishing a release. One-time setup: `pnpm add -g yalc`.
+
+**1. In this repo** — build and push to the local yalc store:
+
+```bash
+pnpm yalc:publish   # runs the build, then `yalc publish --push`
+pnpm yalc:watch     # same, but re-publishes automatically on every file change
+```
+
+(`--push` also updates any consuming project that already added the package via yalc.)
+
+**2. In the consuming repo:**
+
+```bash
+yalc remove --all && pnpm install && yalc add @dept/component-library@0.1.0 && pnpm run dev -- --force
+```
+
+Notes:
+
+- Replace `0.1.0` with the current `"version"` from this repo's [package.json](package.json).
+- `pnpm run dev` is whatever starts that project — adjust if the consuming repo uses a different command (`pnpm start`, …).
+- **Why `-- --force`:** everything after the `--` is passed through to the underlying dev command (Vite). `--force` makes Vite throw away its dependency cache (`node_modules/.vite`) and re-bundle. Without it, Vite sees an unchanged lockfile (yalc swaps the package's files behind pnpm's back) and keeps serving the _old_ cached copy of the library.
+- The `pnpm install` in the middle is not optional — it's what installs the library's own dependencies (`@base-ui/react`, `lucide-react`, …). Skipping it fails the dev server with `Could not resolve "@base-ui/react/button"`.
+- When you're done: `yalc remove --all && pnpm install`.
+- The consuming repo's `.gitignore` needs `.yalc/` and `yalc.lock`.
 
 ## Consumer setup
 
-### 1. Configure the registry
+### 1. Get a GitHub token (one-time per developer)
 
-Create or update `.npmrc` in the consuming repo:
+The package is private to the `dept` org, so installing it requires authentication:
+
+1. GitHub → your avatar → **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)** → **Generate new token (classic)**. Use _classic_ — fine-grained tokens are still unreliable with the npm package registry.
+2. Name it (e.g. `dept packages read`), pick an expiration, and tick exactly one scope: **`read:packages`**.
+3. **Generate token** and copy it immediately — it is shown only once.
+4. Back in the token list, if a **Configure SSO** button appears next to the token: click it and **Authorize** the `dept` org. Without this step installs fail with 401/403 even though the token is valid.
+
+### 2. Configure the registry globally (one-time per developer)
+
+Add these two lines to `~/.npmrc` — the file in your **home directory**, not a project file, so the token can never end up in a commit:
 
 ```
 @dept:registry=https://npm.pkg.github.com/
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+//npm.pkg.github.com/:_authToken=ghp_YOUR_TOKEN_HERE
 ```
 
-Locally, set `NODE_AUTH_TOKEN` to a GitHub personal access token with `read:packages`. In GitHub Actions, `${{ secrets.GITHUB_TOKEN }}` works once this package grants the consuming repo access (package settings → Manage Actions access), or use an org-level token.
+Line 1 routes all `@dept/*` packages to GitHub Packages (everything else still comes from the regular npm registry). Line 2 authenticates against that host. Because it's global, it works for every project on your machine.
 
-### 2. Install
+> npm/pnpm allows only **one** `_authToken` line per host. If your `~/.npmrc` already has one for `npm.pkg.github.com` (packages from another org), keep a single token line and make sure that token is SSO-authorized for every org you pull from.
+
+### 3. Install
 
 ```bash
-pnpm add @dept/component-library   # or npm/yarn — any client works against the registry
+pnpm add @dept/component-library
 ```
 
-### 3. Import the stylesheet once, then use components
+### 4. Import the stylesheet once, then use components
 
 ```tsx
 // app entry point (e.g. app/layout.tsx or main.tsx) — once,
@@ -39,11 +78,11 @@ import { MailIcon } from "lucide-react";
 </Button>;
 ```
 
-That's the entire integration. No Tailwind config, no token setup, no `@source` lines.
-
-**Dark mode:** components follow the host app's `.dark` class on `<html>` (the `next-themes` convention) with the library's own dark palette.
+**Dark mode:** components follow the host app's `.dark` class on `<html>` (the `next-themes` convention).
 
 **Module format:** ESM only, React 18/19. `"use client"` directives are preserved per module — safe to import from Next.js App Router server components.
+
+**CI:** in GitHub Actions, `${{ secrets.GITHUB_TOKEN }}` works as the auth token once this package grants the consuming repo access (package settings → **Manage Actions access**), or use an org-level token secret.
 
 ## Development
 
@@ -60,6 +99,8 @@ pnpm lint
 
 ### Adding a component
 
+> **⚠️ Work in progress** — this flow is not finalized yet; expect it to change.
+
 1. **Generate:** `pnpm dlx shadcn@latest add <component>` — writes the raw base-nova component to `src/components/ui/`.
 2. **Wrap:** create `src/components/<PascalName>/` with the public component, stories, and an `index.ts`, following `src/components/Button/` as the template. The wrapper is our API contract — keep it stable even if the underlying shadcn component changes.
 3. **Export** it from `src/index.ts`.
@@ -69,54 +110,25 @@ pnpm lint
    - Composition uses Base UI's `render` prop, not Radix's `asChild`.
    - Stories cover every variant; check the a11y addon panel.
 
-### Styling model
-
-- The package ships `dist/styles.css`: standard Tailwind class names, standard shadcn tokens (`--primary`, `--radius`, …), **no preflight, no base styles**. Consumers import it once, before their own globals.
-- **The accepted trade-off:** because class names are unprefixed, the library's stylesheet and a Tailwind consumer's stylesheet define the same class names. This is harmless *as long as both sides use the same org tokens and Tailwind v4* — the duplicate definitions are identical, so it doesn't matter which wins. If a consumer's tokens/config drift, whichever stylesheet loads later restyles both sides (hence the import-order convention: library first, app last, so the app wins). We chose to rely on the org's shared-globals.css process instead of technical isolation (prefixing/scoping); if this ever bites, those options are documented in git history (`scripts/prefix-tw-classes.mjs` before its removal) and can be reinstated — including as a build-time transform.
-- `className` passthrough works natively: tailwind-merge resolves conflicts (consumer `px-8` beats a component's built-in padding), and in non-Tailwind consumers any of their own CSS classes can be passed.
-- Tokens in [src/styles/globals.css](src/styles/globals.css) use standard shadcn names so the org token block can be pasted in wholesale. Only the file's first imports differ (no preflight) — see the comment at the top of the file.
-- Dynamic class composition (`"px-" + size`) is forbidden — class strings must be statically analyzable or their CSS is never generated. CVA variant tables are the pattern.
-
-### Testing against a consuming app locally
-
-```bash
-pnpm add -g yalc             # one-time
-pnpm yalc:publish            # build + push to the local yalc store
-pnpm yalc:watch              # rebuild + push on every change
-
-# in the consuming repo:
-yalc add @dept/component-library && pnpm install
-# when done:
-yalc remove @dept/component-library && pnpm install
-```
-
-**The `pnpm install` after `yalc add` is not optional.** yalc only copies files and edits package.json — it's the install that fetches the library's own dependencies (`@base-ui/react`, `lucide-react`, …) and links them in pnpm's store. Skipping it fails the consumer's dev server with `Could not resolve "@base-ui/react/button"`.
-
-Troubleshooting:
-
-- `Could not resolve "@base-ui/react/..."` → run `pnpm install` in the consumer, restart its dev server (stale Vite cache: `rm -rf node_modules/.vite`).
-- A yalc push that **changes the library's dependencies** needs another `pnpm install` in the consumer; content-only pushes apply immediately.
-- Consumers without a `packageManager` field can end up on an ancient corepack fallback pnpm that silently no-ops — pin `"packageManager": "pnpm@10.7.0"` there too.
-
-(Consuming repo's `.gitignore` needs `.yalc/` and `yalc.lock`.)
-
 ## Publishing
 
-1. `pnpm version patch|minor|major`
-2. `git push && git push --tags`
-3. Create a GitHub Release from the tag → the [publish workflow](.github/workflows/publish.yml) type-checks, builds, and publishes to GitHub Packages.
+Direct pushes to `main` are blocked, so releases are done entirely on github.com:
+
+1. **Bump `"version"`** in [package.json](package.json) through a normal PR and merge it — that field is the single source of truth for what gets published.
+2. On the repo page: **Releases** → **Draft a new release**.
+3. **Choose a tag** → type the version exactly as in package.json (e.g. `0.1.1` — no `v` prefix, matching existing tags) → **Create new tag on publish**, target `main`.
+4. Set the release title (the version) and describe the changes.
+5. Click **Publish release** — not _Save draft_; draft releases don't trigger the workflow.
+
+Publishing the release triggers the [publish workflow](.github/workflows/publish.yml), which type-checks, builds, and publishes whatever version package.json declares to GitHub Packages. A version can only be published once — if the workflow fails with "version already exists", the bump in step 1 was missed.
 
 ## Architecture decisions
 
-| Decision                                                               | Why                                                                                                                                                                                                                                                                    |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Base UI primitives** (`@base-ui/react`)                              | shadcn's default since July 2026; actively maintained by the ex-Radix team at MUI; more components than Radix. Invisible to consumers — the wrapper layer is the API.                                                                                                  |
-| **Precompiled, unprefixed CSS** (no `@source`, no prefix)              | Must work in future non-Tailwind consumers → CSS ships precompiled. Prefixing was built, then removed (2026-07): we rely on the org-wide shared globals.css keeping all repos' definitions identical, in exchange for zero authoring friction and native `className` support. Revisit isolation (prefix / selector scoping) only if drift actually bites. |
-| **No preflight in dist/styles.css**                                    | A library must not ship global resets into host apps. Storybook adds preflight to its canvas only.                                                                                                                                                                     |
-| **ESM-only, per-module output with preserved directives**              | All target repos are modern (Next.js 16, Vite). `preserveModules` + `rollup-preserve-directives` keeps `"use client"` boundaries intact for App Router.                                                                                                                |
-| **Runtime deps externalized, versions owned by the lib**               | react/react-dom are peers (must be singletons). Base UI, lucide, CVA, clsx, tailwind-merge are regular dependencies: consumer version bumps can't affect the lib; package managers dedupe when ranges are compatible.                                                  |
-| **Library build isolated in `vite.lib.config.ts`**                     | Storybook's Vite builder auto-merges a root `vite.config.ts`; externals/preserveModules would break its bundle. Never rename that file.                                                                                                                                |
-
-### Theming
-
-The library's tokens use the standard shadcn names, so a consumer app's own token definitions (loaded after the library's stylesheet) restyle library components to match the app — with identical org globals this is a no-op; with deliberate overrides it's the theming mechanism. Storybook shows the library's default tokens.
+| Decision                                                   | Why                                                                                                                                                                                                                                                                                                                                                       |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Base UI primitives** (`@base-ui/react`)                  | shadcn's default since July 2026; actively maintained by the ex-Radix team at MUI; more components than Radix. Invisible to consumers — the wrapper layer is the API.                                                                                                                                                                                     |
+| **Precompiled, unprefixed CSS** (no `@source`, no prefix)  | Must work in future non-Tailwind consumers → CSS ships precompiled. Prefixing was built, then removed (2026-07): we rely on the org-wide shared globals.css keeping all repos' definitions identical, in exchange for zero authoring friction and native `className` support. Revisit isolation (prefix / selector scoping) only if drift actually bites. |
+| **No preflight in dist/styles.css**                        | A library must not ship global resets into host apps. Storybook adds preflight to its canvas only.                                                                                                                                                                                                                                                       |
+| **ESM-only, per-module output with preserved directives**  | All target repos are modern (Next.js 16, Vite). `preserveModules` + `rollup-preserve-directives` keeps `"use client"` boundaries intact for App Router.                                                                                                                                                                                                  |
+| **Runtime deps externalized, versions owned by the lib**   | react/react-dom are peers (must be singletons). Base UI, lucide, CVA, clsx, tailwind-merge are regular dependencies: consumer version bumps can't affect the lib; package managers dedupe when ranges are compatible.                                                                                                                                     |
+| **Library build isolated in `vite.lib.config.ts`**         | Storybook's Vite builder auto-merges a root `vite.config.ts`; externals/preserveModules would break its bundle. Never rename that file.                                                                                                                                                                                                                    |

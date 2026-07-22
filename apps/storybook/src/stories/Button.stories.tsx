@@ -23,7 +23,7 @@ function resolve(args: Record<string, unknown>) {
 const meta: Meta<typeof Button> = {
   // Storybook's CSF indexer requires a STATIC title literal (it can't be a
   // computed/imported value); keep it in sync with buttonSpec.title.
-  title: "Components/Button",
+  title: "Primitives",
   component: Button,
   tags: ["autodocs"],
   argTypes: s.argTypes as Meta<typeof Button>["argTypes"],

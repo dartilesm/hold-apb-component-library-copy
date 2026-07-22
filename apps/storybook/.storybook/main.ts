@@ -1,4 +1,5 @@
 import type { StorybookConfig } from "@storybook/react-vite";
+import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 const config: StorybookConfig = {
@@ -13,6 +14,11 @@ const config: StorybookConfig = {
   refs: {},
   viteFinal: async (config) => {
     config.plugins = config.plugins || [];
+    // @storybook/react-vite does NOT register this itself — without it, stories
+    // fall back to Vite's built-in esbuild transform, which (absent a discoverable
+    // tsconfig.json) defaults to classic-mode JSX and throws "React is not defined".
+    // This plugin's default automatic jsx runtime fixes that unconditionally.
+    config.plugins.push(react());
     config.plugins.push(tailwindcss());
     return config;
   },

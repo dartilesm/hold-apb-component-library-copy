@@ -1,0 +1,11 @@
+// Public API.
+export { default as Button } from "./components/Button.vue";
+
+// Framework-agnostic substrate re-exported for convenience (tokens/styles ship
+// via "@dartilesm/vue/styles.css"). See @dartilesm/core for the shared recipe + contract.
+export {
+  cn,
+  buttonVariants,
+  type ButtonVariantProps,
+  type ButtonBaseContract,
+} from "@dartilesm/core";

@@ -1,0 +1,50 @@
+{
+  "name": "@dartilesm/svelte",
+  "version": "0.0.0",
+  "description": "DEPT Svelte component library — components on Bits UI, styled from @dartilesm/core",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dartilesm/hold-apb-component-library-copy.git"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "svelte-package -i src -o dist && node ./scripts/copy-core-styles.mjs",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
+    "prepublishOnly": "pnpm run build"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  },
+  "dependencies": {
+    "@dartilesm/core": "workspace:^",
+    "@lucide/svelte": "^1.25.0",
+    "bits-ui": "^2.18.1"
+  },
+  "devDependencies": {
+    "@sveltejs/package": "^2.5.8",
+    "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "svelte-check": "^4.7.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}

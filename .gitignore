@@ -7,6 +7,12 @@ dist/
 # Storybook build
 storybook-static/
 
+# Turborepo
+.turbo/
+
+# Svelte (svelte-package / svelte-check intermediate output)
+.svelte-kit/
+
 # Editor
 .vscode/
 .idea/

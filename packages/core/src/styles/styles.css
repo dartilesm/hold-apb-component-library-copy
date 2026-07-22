@@ -1,0 +1,13 @@
+/*
+ * Build entry for @dartilesm/core's shipped stylesheet (compiles to dist/styles.css).
+ *
+ * globals.css brings the Tailwind layer imports (theme + utilities, NO preflight),
+ * tw-animate-css, shadcn's data-* variants, and the DEPT design tokens. The
+ * @source below scans core's own source so every utility referenced by a variant
+ * recipe (recipes/*.ts) — including arbitrary-value ones that can't be safelisted —
+ * is emitted. Framework packages copy this file verbatim; keep every DOM-bound
+ * utility as a literal in core so this scan stays complete.
+ */
+@import "./globals.css";
+
+@source "../**/*.{ts,tsx}";

@@ -1,0 +1,49 @@
+{
+  "name": "@dartilesm/vue",
+  "version": "0.0.0",
+  "description": "DEPT Vue component library — components on Reka UI, styled from @dartilesm/core",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dartilesm/hold-apb-component-library-copy.git"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "vite build --config vite.lib.config.ts && node ./scripts/copy-core-styles.mjs",
+    "typecheck": "vue-tsc --noEmit",
+    "prepublishOnly": "pnpm run build"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@dartilesm/core": "workspace:^",
+    "lucide-vue-next": "^1.0.0",
+    "reka-ui": "^2.10.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/server-renderer": "^3.5.40",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-plugin-dts": "^4.5.4",
+    "vue-tsc": "^3.3.8"
+  }
+}

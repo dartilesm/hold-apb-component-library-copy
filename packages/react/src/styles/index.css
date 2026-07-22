@@ -1,0 +1,9 @@
+/*
+ * TOOLING-ONLY stylesheet — NOT shipped. The shipped sheet is copied from
+ * @dartilesm/core (see scripts/copy-core-styles.mjs). This file exists so the shadcn
+ * CLI (components.json "css") and any local Tailwind tooling have a source entry
+ * that pulls DEPT tokens + scans core's recipes for utilities.
+ */
+@import "@dartilesm/core/styles/globals.css";
+
+@source "../../../core/src/recipes/**/*.ts";

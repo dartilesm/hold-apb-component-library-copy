@@ -1,17 +1,21 @@
 /*
- * Library build config for @dept/vue (scaffold). Builds the TS re-export shell +
- * types; the stylesheet is copied from @dept/core. When real Vue components land,
- * add @vitejs/plugin-vue here and author components on Reka UI / shadcn-vue.
+ * Library build config for @dept/vue — compiles the Vue SFCs to ESM JS +
+ * per-file type declarations (vite-plugin-dts uses vue-tsc for .vue types).
+ * The shipped stylesheet is copied from @dept/core (scripts/copy-core-styles.mjs,
+ * run after this build); nothing here touches CSS.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
 
 const pkg = JSON.parse(
   readFileSync(new URL("./package.json", import.meta.url), "utf8")
 );
 
+// Externalize every runtime dependency (incl. subpaths like @dept/core/recipes
+// and reka-ui) — nothing gets bundled except our own source.
 const external = [
   ...Object.keys(pkg.dependencies ?? {}),
   ...Object.keys(pkg.peerDependencies ?? {}),
@@ -19,11 +23,9 @@ const external = [
 
 export default defineConfig({
   plugins: [
-    dts({
-      tsconfigPath: "./tsconfig.json",
-      rollupTypes: true,
-      insertTypesEntry: true,
-    }),
+    vue(),
+    // Per-file .d.ts (NOT rolled up) — api-extractor can't roll up .vue types.
+    dts({ tsconfigPath: "./tsconfig.json", entryRoot: "src" }),
   ],
   build: {
     lib: {

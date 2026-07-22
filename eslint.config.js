@@ -7,6 +7,7 @@ export default tseslint.config(
       "**/dist/",
       "**/storybook-static/",
       "**/node_modules/",
+      "**/.svelte-kit/",
     ],
   },
   ...tseslint.configs.recommended,

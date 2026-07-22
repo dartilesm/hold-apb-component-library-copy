@@ -1,11 +1,11 @@
-// @dept/svelte — scaffold. Svelte components (Bits UI / shadcn-svelte) will be
-// added here on demand. Until then this package shares the framework-agnostic
-// substrate so consumers can already depend on it and receive DEPT tokens + styles.
+// Public API.
+export { default as Button } from "./components/Button/Button.svelte";
+
+// Framework-agnostic substrate re-exported for convenience (tokens/styles ship
+// via "@dept/svelte/styles.css"). See @dept/core for the shared recipe + contract.
 export {
   cn,
   buttonVariants,
   type ButtonVariantProps,
   type ButtonBaseContract,
 } from "@dept/core";
-
-export const version = "0.0.0";

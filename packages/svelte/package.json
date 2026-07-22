@@ -1,0 +1,40 @@
+{
+  "name": "@dept/svelte",
+  "version": "0.0.0",
+  "description": "DEPT Svelte component library (scaffold) — shares tokens, styles and recipes from @dept/core; components to be built on Bits UI / shadcn-svelte",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": ["dist"],
+  "sideEffects": ["**/*.css"],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dept/hold-apb-component-library.git"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "vite build --config vite.lib.config.ts && node ./scripts/copy-core-styles.mjs",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm run build"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  },
+  "dependencies": {
+    "@dept/core": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}

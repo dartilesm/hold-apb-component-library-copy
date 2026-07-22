@@ -1,0 +1,17 @@
+/*
+ * Storybook-only stylesheet — NEVER shipped.
+ *
+ * The canvas gets Tailwind's preflight so components render on a sane baseline
+ * (a real app brings its own reset). Nothing else is added on purpose: Storybook
+ * must show what a consumer gets from styles.css alone, so a component that only
+ * looks right with extra base styles is a bug.
+ *
+ * globals.css (imported from @dept/core source) brings the Tailwind layers + DEPT
+ * tokens. Unlike the shipped sheet, Storybook recompiles Tailwind from source for
+ * HMR, so we @source the class literals living in core's recipes + react's src.
+ */
+@import "tailwindcss/preflight.css" layer(base);
+@import "@dept/core/styles/globals.css";
+
+@source "../../../../packages/core/src/**/*.ts";
+@source "../../../../packages/react/src/**/*.{ts,tsx}";

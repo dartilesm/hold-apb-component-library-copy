@@ -27,11 +27,21 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
-      - name: Type check
-        run: pnpm run typecheck
+      - name: Type-check and build
+        run: pnpm turbo run typecheck build
 
-      - name: Build library
-        run: pnpm run build
+      - name: Verify shipped CSS completeness
+        # The shipped stylesheet is a closed set: a utility absent here renders
+        # unstyled for consumers. Assert core emitted the key utilities and that
+        # every framework package ships a byte-identical copy of core's sheet.
+        run: |
+          for cls in bg-primary animate-spin size-4 text-primary-foreground; do
+            grep -q "$cls" packages/core/dist/styles.css \
+              || { echo "::error::'$cls' missing from @dept/core dist/styles.css"; exit 1; }
+          done
+          diff -q packages/core/dist/styles.css packages/react/dist/styles.css
+          diff -q packages/core/dist/styles.css packages/vue/dist/styles.css
+          diff -q packages/core/dist/styles.css packages/svelte/dist/styles.css
 
       - name: Build Storybook
-        run: pnpm run build-storybook
+        run: pnpm turbo run build-storybook

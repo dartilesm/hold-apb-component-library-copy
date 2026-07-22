@@ -7,6 +7,9 @@ dist/
 # Storybook build
 storybook-static/
 
+# Turborepo
+.turbo/
+
 # Editor
 .vscode/
 .idea/

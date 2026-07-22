@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "storybook";
 import type { ReactNode } from "react";
 import { MailIcon, ArrowRightIcon, TrashIcon } from "lucide-react";
 
-import { buttonSpec as s } from "@dept/core/story-specs/button";
-import { Button } from "@dept/react";
+import { buttonSpec as s } from "@dartilesm/core/story-specs/button";
+import { Button } from "@dartilesm/react";
 
 // Map the spec's framework-agnostic icon keys to React nodes.
 const icons: Record<string, ReactNode> = {

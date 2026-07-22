@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { LoaderCircleIcon } from "lucide-react";
-import { iconSlotClass, spinnerClass } from "@dept/core/recipes";
-import type { ButtonBaseContract } from "@dept/core/contracts";
+import { iconSlotClass, spinnerClass } from "@dartilesm/core/recipes";
+import type { ButtonBaseContract } from "@dartilesm/core/contracts";
 
 import { Button as ButtonBase } from "@/primitives/button";
 import { cn } from "@/lib/utils";

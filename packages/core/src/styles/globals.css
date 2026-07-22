@@ -1,14 +1,14 @@
 /*
- * @dept/core — DEPT design tokens + Tailwind setup.
+ * @dartilesm/core — DEPT design tokens + Tailwind setup.
  *
  * SOURCE OF TRUTH: this file is now the authoritative definition of the DEPT
- * tokens for the component library (consumed by @dept/react, @dept/vue and
- * @dept/svelte). It is imported by styles.css (the shipped-stylesheet build
- * entry) and exported as `@dept/core/styles/globals.css` for tooling that
+ * tokens for the component library (consumed by @dartilesm/react, @dartilesm/vue and
+ * @dartilesm/svelte). It is imported by styles.css (the shipped-stylesheet build
+ * entry) and exported as `@dartilesm/core/styles/globals.css` for tooling that
  * JIT-compiles Tailwind (Storybook).
  *
  * (Historically these values were copied from core-platform's
- * apps/web/src/app/globals.css. Aligning core-platform to consume @dept/core
+ * apps/web/src/app/globals.css. Aligning core-platform to consume @dartilesm/core
  * instead is a separate, later effort.)
  *
  * Four library-specific deviations from a plain app globals.css, all in the

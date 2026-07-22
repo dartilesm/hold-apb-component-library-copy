@@ -6,17 +6,17 @@ DEPT's brand UI library, published privately to GitHub Packages. It is a **pnpm 
 
 | Package | What it is | Status |
 | --- | --- | --- |
-| [`@dept/core`](packages/core) | Design tokens, the compiled stylesheet, CVA variant recipes, prop-type contracts, `cn()`, story specs. Framework-agnostic. | Published |
-| [`@dept/react`](packages/react) | React components — shadcn/ui on [Base UI](https://base-ui.com) primitives, [lucide](https://lucide.dev) icons. | Published, has components |
-| [`@dept/vue`](packages/vue) | Vue package — scaffold; components to be built on Reka UI / shadcn-vue. | Published shell |
-| [`@dept/svelte`](packages/svelte) | Svelte package — scaffold; components to be built on Bits UI / shadcn-svelte. | Published shell |
-| [`@dept/storybook`](apps/storybook) | Component workbench (React renderer). Composition-ready for Vue/Svelte. | Private app |
+| [`@dartilesm/core`](packages/core) | Design tokens, the compiled stylesheet, CVA variant recipes, prop-type contracts, `cn()`, story specs. Framework-agnostic. | Published |
+| [`@dartilesm/react`](packages/react) | React components — shadcn/ui on [Base UI](https://base-ui.com) primitives, [lucide](https://lucide.dev) icons. | Published, has components |
+| [`@dartilesm/vue`](packages/vue) | Vue package — scaffold; components to be built on Reka UI / shadcn-vue. | Published shell |
+| [`@dartilesm/svelte`](packages/svelte) | Svelte package — scaffold; components to be built on Bits UI / shadcn-svelte. | Published shell |
+| [`@dartilesm/storybook`](apps/storybook) | Component workbench (React renderer). Composition-ready for Vue/Svelte. | Private app |
 
-Each framework package depends on `@dept/core` and **re-exports its stylesheet**, so consumers install a single package and get one `styles.css`. Change a token or recipe in `@dept/core` and it propagates to every framework's shipped CSS.
+Each framework package depends on `@dartilesm/core` and **re-exports its stylesheet**, so consumers install a single package and get one `styles.css`. Change a token or recipe in `@dartilesm/core` and it propagates to every framework's shipped CSS.
 
 ```
 apps/storybook          # showcase (React now; Vue/Svelte compose in later)
-packages/core           # @dept/core   — tokens + compiled styles.css + recipes + contracts
+packages/core           # @dartilesm/core   — tokens + compiled styles.css + recipes + contracts
 packages/{react,vue,svelte}
 ```
 
@@ -36,27 +36,27 @@ The packages are private to the `dept` org, so installing requires authenticatio
 Add to `~/.npmrc` (home directory, so the token never lands in a commit):
 
 ```
-@dept:registry=https://npm.pkg.github.com/
+@dartilesm:registry=https://npm.pkg.github.com/
 //npm.pkg.github.com/:_authToken=ghp_YOUR_TOKEN_HERE
 ```
 
 ### 3. Install the package for your framework
 
 ```bash
-pnpm add @dept/react     # or @dept/vue, @dept/svelte
+pnpm add @dartilesm/react     # or @dartilesm/vue, @dartilesm/svelte
 ```
 
-`@dept/core` comes transitively — you don't install it directly unless you want raw tokens (`@dept/core/styles.css`, `@dept/core/tokens.css`) outside of components.
+`@dartilesm/core` comes transitively — you don't install it directly unless you want raw tokens (`@dartilesm/core/styles.css`, `@dartilesm/core/tokens.css`) outside of components.
 
 ### 4. Import the stylesheet once, then use components
 
 ```tsx
 // app entry point (e.g. app/layout.tsx or main.tsx) — once,
 // BEFORE your own globals.css so the app's definitions win cascade ties
-import "@dept/react/styles.css";
+import "@dartilesm/react/styles.css";
 
 // anywhere
-import { Button } from "@dept/react";
+import { Button } from "@dartilesm/react";
 import { MailIcon } from "lucide-react";
 
 <Button variant="secondary" leftIcon={<MailIcon />} isLoading={saving}>
@@ -71,7 +71,7 @@ import { MailIcon } from "lucide-react";
 
 ## How propagation works
 
-`@dept/core` is the single source of truth for **tokens** (CSS custom properties) and **recipes** (the CVA variant→class maps). It compiles one `dist/styles.css`; the framework packages copy it verbatim. Because every DOM-bound Tailwind utility originates from a string literal in `@dept/core`, that one compiled stylesheet is complete for all frameworks. Change `--primary` (or a variant's classes) in `packages/core/src/…` → rebuild → every framework's `styles.css` reflects it.
+`@dartilesm/core` is the single source of truth for **tokens** (CSS custom properties) and **recipes** (the CVA variant→class maps). It compiles one `dist/styles.css`; the framework packages copy it verbatim. Because every DOM-bound Tailwind utility originates from a string literal in `@dartilesm/core`, that one compiled stylesheet is complete for all frameworks. Change `--primary` (or a variant's classes) in `packages/core/src/…` → rebuild → every framework's `styles.css` reflects it.
 
 > **Adding stateful components later:** Base UI (React) emits `data-open`/`data-checked`, while Reka UI (Vue) and Bits UI (Svelte) emit `data-state="open|checked"`. Before the second stateful component lands in Vue/Svelte, add a `@custom-variant ui-open`/`ui-checked` compatibility layer in `packages/core/src/styles/globals.css` so recipe strings stay identical across frameworks. (Button is unaffected — it keys only on native/ARIA state.)
 
@@ -89,11 +89,11 @@ pnpm build-storybook
 
 # Storybook (imports the built packages, like a real consumer) — run its build in
 # watch alongside the dev server so component edits show up:
-pnpm --filter @dept/react build:watch   # (in one terminal)
-pnpm dev                                # Storybook on :6006 (@dept/storybook)
+pnpm --filter @dartilesm/react build:watch   # (in one terminal)
+pnpm dev                                # Storybook on :6006 (@dartilesm/storybook)
 ```
 
-Turbo orders builds via `dependsOn: ["^build"]`, so `@dept/core` always builds before the packages that copy its stylesheet.
+Turbo orders builds via `dependsOn: ["^build"]`, so `@dartilesm/core` always builds before the packages that copy its stylesheet.
 
 ### Component structure (all packages)
 
@@ -101,23 +101,23 @@ Two layers, in two top-level dirs: **`src/primitives/<name>`** — the raw shadc
 
 ### Adding a React component
 
-1. **Generate:** `pnpm --filter @dept/react dlx shadcn@latest add <component>` — writes the raw component to `packages/react/src/primitives/` (`components.json` sets `aliases.ui: "@/primitives"`).
-2. **Hoist the recipe:** move the generated `cva(...)` block into `packages/core/src/recipes/<name>.ts` (export it + its `VariantProps` type) and import it back into the primitive. This keeps the shipped stylesheet complete and lets Vue/Svelte reuse the exact classes. The `@/lib/utils` `cn` import keeps working (it re-exports from `@dept/core/cn`).
+1. **Generate:** `pnpm --filter @dartilesm/react dlx shadcn@latest add <component>` — writes the raw component to `packages/react/src/primitives/` (`components.json` sets `aliases.ui: "@/primitives"`).
+2. **Hoist the recipe:** move the generated `cva(...)` block into `packages/core/src/recipes/<name>.ts` (export it + its `VariantProps` type) and import it back into the primitive. This keeps the shipped stylesheet complete and lets Vue/Svelte reuse the exact classes. The `@/lib/utils` `cn` import keeps working (it re-exports from `@dartilesm/core/cn`).
 3. **Wrap:** create the public component `packages/react/src/components/<PascalName>.tsx` (flat file), following `components/Button.tsx` — the wrapper is the stable API contract, and it accepts native HTML attrs via `ComponentProps<typeof Primitive>`.
 4. **Contract & spec (optional but encouraged):** add the framework-agnostic prop slice to `packages/core/src/contracts/` and a story spec to `packages/core/src/story-specs/` so future Vue/Svelte components match by construction.
 5. **Export** from `packages/react/src/index.ts`.
-6. **Story:** add `apps/storybook/src/stories/<Name>.stories.tsx` importing `{ <Name> } from "@dept/react"` (+ the core story-spec). Storybook consumes the built package, so run `pnpm --filter @dept/react build:watch` alongside `storybook dev`.
+6. **Story:** add `apps/storybook/src/stories/<Name>.stories.tsx` importing `{ <Name> } from "@dartilesm/react"` (+ the core story-spec). Storybook consumes the built package, so run `pnpm --filter @dartilesm/react build:watch` alongside `storybook dev`.
 7. **Checklist:** `"use client"` on interactive components; no bare `border`/`divide` without an explicit color (the lib ships no base styles); native HTML attrs accepted + typed; composition via Base UI's `render` prop; stories cover every variant (check the a11y panel).
 
 ### Local testing (yalc)
 
-Because a consumer installs `@dept/react` **and** its transitive `@dept/core`, publish/add both (yalc does not rewrite `workspace:^`):
+Because a consumer installs `@dartilesm/react` **and** its transitive `@dartilesm/core`, publish/add both (yalc does not rewrite `workspace:^`):
 
 ```bash
-pnpm --filter @dept/core  exec yalc publish --push
-pnpm --filter @dept/react exec yalc publish --push
+pnpm --filter @dartilesm/core  exec yalc publish --push
+pnpm --filter @dartilesm/react exec yalc publish --push
 # in the consuming repo:
-yalc add @dept/core @dept/react && pnpm install && pnpm dev -- --force
+yalc add @dartilesm/core @dartilesm/react && pnpm install && pnpm dev -- --force
 ```
 
 ## Publishing (Changesets)
@@ -126,15 +126,15 @@ Independent versioning via [Changesets](https://github.com/changesets/changesets
 
 1. In a feature PR, run `pnpm changeset` and describe the change (pick the packages + bump levels). Commit the generated `.changeset/*.md`.
 2. Merge to `main`. The [release workflow](.github/workflows/release.yml) runs `changesets/action`, which opens/updates a **"Version Packages"** PR that applies the bumps and changelogs. A core change cascades a bump to the framework packages that depend on it.
-3. Merge the Version Packages PR → CI versions and **publishes** the changed packages to GitHub Packages (`workspace:^` is rewritten to a real range in each tarball). `@dept/storybook` is private and never published.
+3. Merge the Version Packages PR → CI versions and **publishes** the changed packages to GitHub Packages (`workspace:^` is rewritten to a real range in each tarball). `@dartilesm/storybook` is private and never published.
 
 ## Architecture decisions
 
 | Decision | Why |
 | --- | --- |
 | **Per-framework native stack** (Base UI / Reka UI / Bits UI) | Behavior primitives are framework-specific and can't be shared across React/Vue/Svelte. Sharing tokens + compiled CSS + recipes + contracts gives visual/API parity without a shared behavior runtime (Zag/Ark) or Web Components. |
-| **`@dept/core` owns all DOM-bound utilities** | The shipped `styles.css` is a closed set; a class absent at scan time renders unstyled. Keeping every utility as a literal in core (recipes + exported structural consts) makes one centrally-compiled stylesheet complete for every framework — no cross-package `@source` coupling. |
+| **`@dartilesm/core` owns all DOM-bound utilities** | The shipped `styles.css` is a closed set; a class absent at scan time renders unstyled. Keeping every utility as a literal in core (recipes + exported structural consts) makes one centrally-compiled stylesheet complete for every framework — no cross-package `@source` coupling. |
 | **Framework packages copy core's `styles.css`** | Satisfies "install one package, get one stylesheet" and guarantees the sheet is _sourced_ from core rather than re-derived per framework. |
 | **Precompiled, unprefixed CSS, no preflight** | Must work in non-Tailwind consumers → CSS ships precompiled. A library must not ship global resets; Storybook adds preflight to its canvas only. |
 | **ESM-only, per-module output, preserved directives** | Modern targets (Next.js, Vite). `preserveModules` + `rollup-preserve-directives` keep `"use client"` boundaries intact for the App Router. |
-| **Independent versioning (Changesets)** | Each package versions on its own; framework packages depend on a `@dept/core` range. When a core change breaks a framework's public types, add an explicit major changeset for that framework. |
+| **Independent versioning (Changesets)** | Each package versions on its own; framework packages depend on a `@dartilesm/core` range. When a core change breaks a framework's public types, add an explicit major changeset for that framework. |

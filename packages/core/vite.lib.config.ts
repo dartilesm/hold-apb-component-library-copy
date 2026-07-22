@@ -1,5 +1,5 @@
 /*
- * Library build config for @dept/core — builds the framework-agnostic JS + type
+ * Library build config for @dartilesm/core — builds the framework-agnostic JS + type
  * declarations only. The shipped stylesheet (dist/styles.css) is built separately
  * by the Tailwind CLI (see `build:css` in package.json); nothing here touches CSS.
  *

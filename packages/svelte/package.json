@@ -1,7 +1,7 @@
 {
-  "name": "@dept/svelte",
+  "name": "@dartilesm/svelte",
   "version": "0.0.0",
-  "description": "DEPT Svelte component library — components on Bits UI, styled from @dept/core",
+  "description": "DEPT Svelte component library — components on Bits UI, styled from @dartilesm/core",
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dept/hold-apb-component-library.git"
+    "url": "https://github.com/dartilesm/hold-apb-component-library-copy.git"
   },
   "license": "UNLICENSED",
   "scripts": {
@@ -35,7 +35,7 @@
     "svelte": "^5.0.0"
   },
   "dependencies": {
-    "@dept/core": "workspace:^",
+    "@dartilesm/core": "workspace:^",
     "@lucide/svelte": "^1.25.0",
     "bits-ui": "^2.18.1"
   },

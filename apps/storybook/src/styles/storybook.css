@@ -6,12 +6,12 @@
  * must show what a consumer gets from styles.css alone, so a component that only
  * looks right with extra base styles is a bug.
  *
- * globals.css (imported from @dept/core source) brings the Tailwind layers + DEPT
+ * globals.css (imported from @dartilesm/core source) brings the Tailwind layers + DEPT
  * tokens. Stories consume the built packages, so every class literal originates
- * in @dept/core's recipes — scan those (plus this app's stories) for Tailwind JIT.
+ * in @dartilesm/core's recipes — scan those (plus this app's stories) for Tailwind JIT.
  */
 @import "tailwindcss/preflight.css" layer(base);
-@import "@dept/core/styles/globals.css";
+@import "@dartilesm/core/styles/globals.css";
 
 @source "../../../../packages/core/src/**/*.ts";
 @source "../**/*.@(ts|tsx)";

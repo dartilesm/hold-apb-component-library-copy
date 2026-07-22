@@ -1,13 +1,13 @@
 <script setup lang="ts">
-// Raw primitive layer — mirrors @dept/react's primitives/button.tsx.
+// Raw primitive layer — mirrors @dartilesm/react's primitives/button.tsx.
 // Polymorphic via Reka UI's Primitive (as / as-child), styled entirely from
-// @dept/core's shared recipe. Do NOT hand-write Tailwind utilities here — they
-// must live in @dept/core/recipes so the shipped stylesheet stays complete.
+// @dartilesm/core's shared recipe. Do NOT hand-write Tailwind utilities here — they
+// must live in @dartilesm/core/recipes so the shipped stylesheet stays complete.
 import { Primitive, type PrimitiveProps } from "reka-ui";
 import type { ButtonHTMLAttributes } from "vue";
-import { buttonVariants } from "@dept/core/recipes";
-import type { ButtonVariant, ButtonSize } from "@dept/core/contracts";
-import { cn } from "@dept/core";
+import { buttonVariants } from "@dartilesm/core/recipes";
+import type { ButtonVariant, ButtonSize } from "@dartilesm/core/contracts";
+import { cn } from "@dartilesm/core";
 
 // Accepts every native <button> attribute (typed) + Reka's as/as-child + our
 // variant props. `/* @vue-ignore */` keeps ButtonHTMLAttributes TYPE-ONLY so

@@ -1,7 +1,7 @@
 /*
- * Library build config for @dept/vue — compiles the Vue SFCs to ESM JS +
+ * Library build config for @dartilesm/vue — compiles the Vue SFCs to ESM JS +
  * per-file type declarations (vite-plugin-dts uses vue-tsc for .vue types).
- * The shipped stylesheet is copied from @dept/core (scripts/copy-core-styles.mjs,
+ * The shipped stylesheet is copied from @dartilesm/core (scripts/copy-core-styles.mjs,
  * run after this build); nothing here touches CSS.
  */
 import { readFileSync } from "node:fs";
@@ -14,7 +14,7 @@ const pkg = JSON.parse(
   readFileSync(new URL("./package.json", import.meta.url), "utf8")
 );
 
-// Externalize every runtime dependency (incl. subpaths like @dept/core/recipes
+// Externalize every runtime dependency (incl. subpaths like @dartilesm/core/recipes
 // and reka-ui) — nothing gets bundled except our own source.
 const external = [
   ...Object.keys(pkg.dependencies ?? {}),

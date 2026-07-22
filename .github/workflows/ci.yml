@@ -37,7 +37,7 @@ jobs:
         run: |
           for cls in bg-primary animate-spin size-4 text-primary-foreground; do
             grep -q "$cls" packages/core/dist/styles.css \
-              || { echo "::error::'$cls' missing from @dept/core dist/styles.css"; exit 1; }
+              || { echo "::error::'$cls' missing from @dartilesm/core dist/styles.css"; exit 1; }
           done
           diff -q packages/core/dist/styles.css packages/react/dist/styles.css
           diff -q packages/core/dist/styles.css packages/vue/dist/styles.css

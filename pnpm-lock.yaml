@@ -26,10 +26,10 @@ importers:
 
   apps/storybook:
     dependencies:
-      '@dept/core':
+      '@dartilesm/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@dept/react':
+      '@dartilesm/react':
         specifier: workspace:*
         version: link:../../packages/react
     devDependencies:
@@ -115,7 +115,7 @@ importers:
       '@base-ui/react':
         specifier: ^1.6.0
         version: 1.6.0(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@dept/core':
+      '@dartilesm/core':
         specifier: workspace:^
         version: link:../core
       lucide-react:
@@ -161,7 +161,7 @@ importers:
 
   packages/svelte:
     dependencies:
-      '@dept/core':
+      '@dartilesm/core':
         specifier: workspace:^
         version: link:../core
       '@lucide/svelte':
@@ -195,7 +195,7 @@ importers:
 
   packages/vue:
     dependencies:
-      '@dept/core':
+      '@dartilesm/core':
         specifier: workspace:^
         version: link:../core
       lucide-vue-next:

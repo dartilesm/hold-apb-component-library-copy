@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 const config: StorybookConfig = {
   // Stories live in this app and import each component from its published package
-  // (e.g. `@dept/react`), which resolves to the built dist — exactly like a real
+  // (e.g. `@dartilesm/react`), which resolves to the built dist — exactly like a real
   // consumer. In dev, run the package's build:watch alongside `storybook dev`.
   stories: [{ directory: "../src", files: "**/*.stories.@(ts|tsx)", titlePrefix: "" }],
   addons: ["@storybook/addon-docs", "@storybook/addon-a11y"],

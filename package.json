@@ -1,12 +1,12 @@
 {
-  "name": "@dept/components-monorepo",
+  "name": "@dartilesm/components-monorepo",
   "version": "0.0.0",
   "private": true,
   "description": "DEPT brand UI library — framework-agnostic core with per-framework packages (React, Vue, Svelte)",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dept/hold-apb-component-library.git"
+    "url": "https://github.com/dartilesm/hold-apb-component-library-copy.git"
   },
   "license": "UNLICENSED",
   "engines": {
@@ -22,7 +22,7 @@
     "typecheck": "turbo run typecheck",
     "lint": "eslint .",
     "build-storybook": "turbo run build-storybook",
-    "dev": "turbo run dev --filter=@dept/storybook",
+    "dev": "turbo run dev --filter=@dartilesm/storybook",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "changeset publish"

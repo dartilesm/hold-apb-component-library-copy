@@ -1,7 +1,7 @@
 {
-  "name": "@dept/react",
-  "version": "0.1.0",
-  "description": "DEPT React component library — shadcn/ui on Base UI primitives, styled from @dept/core",
+  "name": "@dartilesm/react",
+  "version": "0.0.0",
+  "description": "DEPT React component library — shadcn/ui on Base UI primitives, styled from @dartilesm/core",
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dept/hold-apb-component-library.git"
+    "url": "https://github.com/dartilesm/hold-apb-component-library-copy.git"
   },
   "license": "UNLICENSED",
   "scripts": {
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
-    "@dept/core": "workspace:^",
+    "@dartilesm/core": "workspace:^",
     "lucide-react": "^1.24.0"
   },
   "devDependencies": {

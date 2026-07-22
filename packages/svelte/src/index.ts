@@ -2,10 +2,10 @@
 export { default as Button } from "./components/Button.svelte";
 
 // Framework-agnostic substrate re-exported for convenience (tokens/styles ship
-// via "@dept/svelte/styles.css"). See @dept/core for the shared recipe + contract.
+// via "@dartilesm/svelte/styles.css"). See @dartilesm/core for the shared recipe + contract.
 export {
   cn,
   buttonVariants,
   type ButtonVariantProps,
   type ButtonBaseContract,
-} from "@dept/core";
+} from "@dartilesm/core";

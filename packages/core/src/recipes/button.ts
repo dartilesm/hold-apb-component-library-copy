@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
  * classes across every framework. `cva()` returns a plain string, so React
  * (`className`), Vue (`:class`) and Svelte (`class`) all consume it identically.
  *
- * Every class string here is a literal so @dept/core's Tailwind build scans and
+ * Every class string here is a literal so @dartilesm/core's Tailwind build scans and
  * emits exactly these utilities into dist/styles.css (which framework packages
  * copy verbatim). Do not hand-write utilities in framework wrappers — add them
  * here (or as an exported const below) so the shipped stylesheet stays complete.

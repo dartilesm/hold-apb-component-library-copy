@@ -1,11 +1,11 @@
 <script lang="ts" module>
-  // Public Button — the stable API. Mirrors @dept/react's components/Button.tsx:
+  // Public Button — the stable API. Mirrors @dartilesm/react's components/Button.tsx:
   // adds isLoading + leftIcon/rightIcon (Svelte Snippets) on top of the primitive.
-  // Shared prop contract + icon-slot classes come from @dept/core.
+  // Shared prop contract + icon-slot classes come from @dartilesm/core.
   import type { Snippet } from "svelte";
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
   import type { WithElementRef } from "bits-ui";
-  import type { ButtonBaseContract } from "@dept/core/contracts";
+  import type { ButtonBaseContract } from "@dartilesm/core/contracts";
 
   // Accept every native button/anchor attribute (typed) + the shared contract.
   // `class`/`href` come from the HTML attribute types.
@@ -19,7 +19,7 @@
 
 <script lang="ts">
   import { LoaderCircle } from "@lucide/svelte";
-  import { iconSlotClass, spinnerClass } from "@dept/core/recipes";
+  import { iconSlotClass, spinnerClass } from "@dartilesm/core/recipes";
   import UiButton from "../primitives/button.svelte";
 
   let {

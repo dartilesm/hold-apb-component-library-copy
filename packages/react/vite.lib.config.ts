@@ -1,7 +1,7 @@
 /*
- * Library build config for @dept/react — builds the React components + type
+ * Library build config for @dartilesm/react — builds the React components + type
  * declarations only. The shipped stylesheet is NOT produced here: it is copied
- * verbatim from @dept/core's compiled dist/styles.css by scripts/copy-core-styles.mjs
+ * verbatim from @dartilesm/core's compiled dist/styles.css by scripts/copy-core-styles.mjs
  * (run after this build). Keep this file named vite.lib.config.ts and ensure no
  * root/package vite.config.ts exists that a tool might auto-merge.
  */
@@ -17,7 +17,7 @@ const pkg = JSON.parse(
 );
 
 // Externalize every runtime dependency (incl. subpaths like @base-ui/react/button
-// and @dept/core/recipes) — nothing gets bundled except our own source.
+// and @dartilesm/core/recipes) — nothing gets bundled except our own source.
 const external = [
   ...Object.keys(pkg.dependencies ?? {}),
   ...Object.keys(pkg.peerDependencies ?? {}),

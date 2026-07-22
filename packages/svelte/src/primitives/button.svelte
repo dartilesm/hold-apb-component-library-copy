@@ -1,10 +1,10 @@
 <script lang="ts" module>
-  // Raw primitive layer — mirrors @dept/react's components/ui/button.tsx and
+  // Raw primitive layer — mirrors @dartilesm/react's components/ui/button.tsx and
   // shadcn-svelte's button.svelte. Native <button>/<a>, styled entirely from
-  // @dept/core's shared recipe. Do NOT hand-write Tailwind utilities here.
+  // @dartilesm/core's shared recipe. Do NOT hand-write Tailwind utilities here.
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
   import type { WithElementRef } from "bits-ui";
-  import { type ButtonVariantProps } from "@dept/core/recipes";
+  import { type ButtonVariantProps } from "@dartilesm/core/recipes";
 
   export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
     WithElementRef<HTMLAnchorAttributes> &
@@ -12,8 +12,8 @@
 </script>
 
 <script lang="ts">
-  import { buttonVariants } from "@dept/core/recipes";
-  import { cn } from "@dept/core";
+  import { buttonVariants } from "@dartilesm/core/recipes";
+  import { cn } from "@dartilesm/core";
 
   let {
     class: className,

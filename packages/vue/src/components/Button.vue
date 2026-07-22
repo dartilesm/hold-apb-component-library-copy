@@ -1,11 +1,11 @@
 <script setup lang="ts">
-// Public Button — the stable API. Mirrors @dept/react's components/Button.tsx:
+// Public Button — the stable API. Mirrors @dartilesm/react's components/Button.tsx:
 // adds isLoading + leftIcon/rightIcon (here as named slots, the Vue idiom) on top
-// of the primitive. Shared prop contract + icon-slot classes come from @dept/core.
+// of the primitive. Shared prop contract + icon-slot classes come from @dartilesm/core.
 import { LoaderCircle } from "lucide-vue-next";
 import type { ButtonHTMLAttributes } from "vue";
-import { iconSlotClass, spinnerClass } from "@dept/core/recipes";
-import type { ButtonBaseContract } from "@dept/core/contracts";
+import { iconSlotClass, spinnerClass } from "@dartilesm/core/recipes";
+import type { ButtonBaseContract } from "@dartilesm/core/contracts";
 import UiButton from "../primitives/Button.vue";
 
 // `/* @vue-ignore */ ButtonHTMLAttributes` = typed native attrs that fall through

@@ -1,5 +1,5 @@
 /*
- * Build entry for @dept/core's shipped stylesheet (compiles to dist/styles.css).
+ * Build entry for @dartilesm/core's shipped stylesheet (compiles to dist/styles.css).
  *
  * globals.css brings the Tailwind layer imports (theme + utilities, NO preflight),
  * tw-animate-css, shadcn's data-* variants, and the DEPT design tokens. The

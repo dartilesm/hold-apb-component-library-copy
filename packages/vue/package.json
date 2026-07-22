@@ -1,7 +1,7 @@
 {
-  "name": "@dept/vue",
+  "name": "@dartilesm/vue",
   "version": "0.0.0",
-  "description": "DEPT Vue component library — components on Reka UI, styled from @dept/core",
+  "description": "DEPT Vue component library — components on Reka UI, styled from @dartilesm/core",
   "type": "module",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dept/hold-apb-component-library.git"
+    "url": "https://github.com/dartilesm/hold-apb-component-library-copy.git"
   },
   "license": "UNLICENSED",
   "scripts": {
@@ -34,7 +34,7 @@
     "vue": "^3.5.0"
   },
   "dependencies": {
-    "@dept/core": "workspace:^",
+    "@dartilesm/core": "workspace:^",
     "lucide-vue-next": "^1.0.0",
     "reka-ui": "^2.10.1"
   },

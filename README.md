@@ -82,23 +82,32 @@ Uses **pnpm** (pinned via `packageManager`) + **Turborepo**.
 ```bash
 nvm use            # Node 22
 pnpm install
-pnpm dev           # Storybook on :6006 (@dept/storybook)
 pnpm build         # turbo build — core first, then framework packages
 pnpm typecheck
 pnpm lint
 pnpm build-storybook
+
+# Storybook (imports the built packages, like a real consumer) — run its build in
+# watch alongside the dev server so component edits show up:
+pnpm --filter @dept/react build:watch   # (in one terminal)
+pnpm dev                                # Storybook on :6006 (@dept/storybook)
 ```
 
 Turbo orders builds via `dependsOn: ["^build"]`, so `@dept/core` always builds before the packages that copy its stylesheet.
 
+### Component structure (all packages)
+
+Two layers, in two top-level dirs: **`src/primitives/<name>`** — the raw shadcn/primitive-based building block (the `shadcn add` target); **`src/components/<Name>`** — the public DEPT component (stable API: `isLoading`, icon slots, …). Primitives (and their wrappers) accept the full native HTML attribute surface, typed. **Stories live in `apps/storybook`**, not in the packages. See the [`building-components` skill](.agents/skills/building-components/SKILL.md) for the full workflow.
+
 ### Adding a React component
 
-1. **Generate:** `pnpm --filter @dept/react dlx shadcn@latest add <component>` — writes the raw base-nova component to `packages/react/src/components/ui/`.
-2. **Hoist the recipe:** move the generated `cva(...)` block into `packages/core/src/recipes/<name>.ts` (export it + its `VariantProps` type) and import it back into the `ui/` component. This keeps the shipped stylesheet complete and lets Vue/Svelte reuse the exact classes. The `@/lib/utils` `cn` import keeps working (it re-exports from `@dept/core/cn`).
-3. **Wrap:** create `packages/react/src/components/<PascalName>/` with the public component, stories, and `index.ts`, following `Button/` — the wrapper is the stable API contract.
+1. **Generate:** `pnpm --filter @dept/react dlx shadcn@latest add <component>` — writes the raw component to `packages/react/src/primitives/` (`components.json` sets `aliases.ui: "@/primitives"`).
+2. **Hoist the recipe:** move the generated `cva(...)` block into `packages/core/src/recipes/<name>.ts` (export it + its `VariantProps` type) and import it back into the primitive. This keeps the shipped stylesheet complete and lets Vue/Svelte reuse the exact classes. The `@/lib/utils` `cn` import keeps working (it re-exports from `@dept/core/cn`).
+3. **Wrap:** create the public component `packages/react/src/components/<PascalName>.tsx` (flat file), following `components/Button.tsx` — the wrapper is the stable API contract, and it accepts native HTML attrs via `ComponentProps<typeof Primitive>`.
 4. **Contract & spec (optional but encouraged):** add the framework-agnostic prop slice to `packages/core/src/contracts/` and a story spec to `packages/core/src/story-specs/` so future Vue/Svelte components match by construction.
 5. **Export** from `packages/react/src/index.ts`.
-6. **Checklist:** `"use client"` on interactive components; no bare `border`/`divide` without an explicit color (the lib ships no base styles); composition via Base UI's `render` prop; stories cover every variant (check the a11y panel).
+6. **Story:** add `apps/storybook/src/stories/<Name>.stories.tsx` importing `{ <Name> } from "@dept/react"` (+ the core story-spec). Storybook consumes the built package, so run `pnpm --filter @dept/react build:watch` alongside `storybook dev`.
+7. **Checklist:** `"use client"` on interactive components; no bare `border`/`divide` without an explicit color (the lib ships no base styles); native HTML attrs accepted + typed; composition via Base UI's `render` prop; stories cover every variant (check the a11y panel).
 
 ### Local testing (yalc)
 

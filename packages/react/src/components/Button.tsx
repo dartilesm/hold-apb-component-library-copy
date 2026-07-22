@@ -5,7 +5,7 @@ import { LoaderCircleIcon } from "lucide-react";
 import { iconSlotClass, spinnerClass } from "@dept/core/recipes";
 import type { ButtonBaseContract } from "@dept/core/contracts";
 
-import { Button as ButtonBase } from "@/components/ui/button";
+import { Button as ButtonBase } from "@/primitives/button";
 import { cn } from "@/lib/utils";
 
 export interface ButtonProps

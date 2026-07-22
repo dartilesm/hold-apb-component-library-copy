@@ -1,5 +1,5 @@
 // Public API.
-export { default as Button } from "./components/Button/Button.svelte";
+export { default as Button } from "./components/Button.svelte";
 
 // Framework-agnostic substrate re-exported for convenience (tokens/styles ship
 // via "@dept/svelte/styles.css"). See @dept/core for the shared recipe + contract.

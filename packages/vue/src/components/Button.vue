@@ -1,14 +1,19 @@
 <script setup lang="ts">
-// Public Button — the stable API. Mirrors @dept/react's components/Button/Button.tsx:
-// adds isLoading + leftIcon/rightIcon (here as named slots, the Vue idiom) on top of
-// the ui/ primitive. Shared prop contract + icon-slot classes come from @dept/core.
+// Public Button — the stable API. Mirrors @dept/react's components/Button.tsx:
+// adds isLoading + leftIcon/rightIcon (here as named slots, the Vue idiom) on top
+// of the primitive. Shared prop contract + icon-slot classes come from @dept/core.
 import { LoaderCircle } from "lucide-vue-next";
+import type { ButtonHTMLAttributes } from "vue";
 import { iconSlotClass, spinnerClass } from "@dept/core/recipes";
 import type { ButtonBaseContract } from "@dept/core/contracts";
-import UiButton from "../ui/Button.vue";
+import UiButton from "../primitives/Button.vue";
 
+// `/* @vue-ignore */ ButtonHTMLAttributes` = typed native attrs that fall through
+// to the underlying button (via the primitive) without becoming declared props.
 const props = withDefaults(
-  defineProps<ButtonBaseContract & { class?: string }>(),
+  defineProps<
+    ButtonBaseContract & /* @vue-ignore */ ButtonHTMLAttributes & { class?: string }
+  >(),
   { variant: "default", size: "default", isLoading: false }
 );
 </script>

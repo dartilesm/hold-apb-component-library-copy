@@ -7,11 +7,11 @@
  * looks right with extra base styles is a bug.
  *
  * globals.css (imported from @dept/core source) brings the Tailwind layers + DEPT
- * tokens. Unlike the shipped sheet, Storybook recompiles Tailwind from source for
- * HMR, so we @source the class literals living in core's recipes + react's src.
+ * tokens. Stories consume the built packages, so every class literal originates
+ * in @dept/core's recipes — scan those (plus this app's stories) for Tailwind JIT.
  */
 @import "tailwindcss/preflight.css" layer(base);
 @import "@dept/core/styles/globals.css";
 
 @source "../../../../packages/core/src/**/*.ts";
-@source "../../../../packages/react/src/**/*.{ts,tsx}";
+@source "../**/*.@(ts|tsx)";
